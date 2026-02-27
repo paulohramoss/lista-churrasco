@@ -274,6 +274,9 @@
       }
     };
 
+    // App Version - Mude este valor (ex: '1.1') sempre que quiser forçar a limpeza do cache/localStorage dos usuários
+    const APP_VERSION = '1.0';
+
     // State
     let people = 10;
     let selectedItems = new Set(['picanha', 'linguica', 'cerveja', 'refrigerante', 'farofa', 'pao_alho', 'sal_grosso', 'carvao']);
@@ -281,25 +284,33 @@
 
     // Load saved data
     try {
-      const savedData = localStorage.getItem('churrascoData');
-      if (savedData) {
-        const parsed = JSON.parse(savedData);
-        if (parsed && typeof parsed === 'object') {
-          for (const cat in parsed) {
-            if (ingredientsData[cat] && parsed[cat].items) {
-              // Replace everything so we can load dynamically added items correctly
-              ingredientsData[cat].items = parsed[cat].items;
+      const savedVersion = localStorage.getItem('churrascoVersion');
+      if (savedVersion !== APP_VERSION) {
+        // Versão mudou (ou é a primeira vez): limpa o estado antigo
+        localStorage.removeItem('churrascoData');
+        localStorage.removeItem('churrascoState');
+        localStorage.setItem('churrascoVersion', APP_VERSION);
+      } else {
+        const savedData = localStorage.getItem('churrascoData');
+        if (savedData) {
+          const parsed = JSON.parse(savedData);
+          if (parsed && typeof parsed === 'object') {
+            for (const cat in parsed) {
+              if (ingredientsData[cat] && parsed[cat].items) {
+                // Replace everything so we can load dynamically added items correctly
+                ingredientsData[cat].items = parsed[cat].items;
+              }
             }
           }
         }
-      }
-      const savedState = localStorage.getItem('churrascoState');
-      if (savedState) {
-        const s = JSON.parse(savedState);
-        if (s.people) people = s.people;
-        if (s.selectedItems) selectedItems = new Set(s.selectedItems);
-        if (s.guests) guests = s.guests;
-      }
+        const savedState = localStorage.getItem('churrascoState');
+        if (savedState) {
+          const s = JSON.parse(savedState);
+          if (s.people) people = s.people;
+          if (s.selectedItems) selectedItems = new Set(s.selectedItems);
+          if (s.guests) guests = s.guests;
+        }
+      } // <- Aqui fecha o bloco 'else' do savedVersion
     } catch (e) { }
 
     // Save data function
