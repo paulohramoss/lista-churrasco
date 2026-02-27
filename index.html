@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="pt-BR" class="h-full">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Churrasco Medleds</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Inter:wght@400;500;600;700&amp;display=swap"
+    rel="stylesheet">
+  <style>
+    .font-display {
+      font-family: 'Bebas Neue', sans-serif;
+    }
+
+    .font-body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .fire-gradient {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d1f1f 50%, #1a1a1a 100%);
+    }
+
+    .card-glow {
+      box-shadow: 0 4px 20px rgba(255, 107, 53, 0.15);
+    }
+
+    .ember-glow {
+      box-shadow: 0 0 30px rgba(255, 107, 53, 0.3);
+    }
+
+    @keyframes flicker {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.8;
+      }
+    }
+
+    .animate-flicker {
+      animation: flicker 2s ease-in-out infinite;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-slide-in {
+      animation: slideIn 0.3s ease-out forwards;
+    }
+
+    .checkbox-custom:checked {
+      background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      background: transparent;
+    }
+
+    input[type="range"]::-webkit-slider-track {
+      height: 8px;
+      border-radius: 4px;
+      background: #374151;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+      cursor: pointer;
+      margin-top: -8px;
+      box-shadow: 0 2px 10px rgba(255, 107, 53, 0.5);
+    }
+
+    input[type="range"]::-moz-range-track {
+      height: 8px;
+      border-radius: 4px;
+      background: #374151;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 2px 10px rgba(255, 107, 53, 0.5);
+    }
+  </style>
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+  </style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+</head>
+
+<body class="h-full font-body">
+  <div id="app-wrapper" class="h-full overflow-auto fire-gradient">
+    <div class="min-h-full px-4 py-8 md:px-8">
+      <div class="max-w-4xl mx-auto"><!-- Header -->
+        <header class="text-center mb-8">
+          <div class="inline-flex items-center gap-3 mb-2"><span class="text-5xl animate-flicker">🔥</span>
+            <h1 id="main-title" class="font-display text-5xl md:text-6xl tracking-wide" style="color: #ff6b35;">LISTA DE
+              CHURRASCO</h1><span class="text-5xl animate-flicker">🔥</span>
+          </div>
+          <p id="subtitle" class="text-lg" style="color: #9ca3af;">Monte sua lista perfeita para o churras</p>
+        </header><!-- People Selector -->
+        <div class="rounded-2xl p-6 mb-6 card-glow" style="background-color: #262626;">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div class="flex items-center gap-3"><span class="text-3xl">👥</span>
+              <div>
+                <h2 class="font-semibold text-lg" style="color: #f5f5f5;">Quantas pessoas?</h2>
+                <p class="text-sm" style="color: #9ca3af;">Ajuste para calcular as quantidades</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4"><button id="btn-decrease"
+                class="w-12 h-12 rounded-full font-bold text-2xl transition-all hover:scale-110 active:scale-95"
+                style="background-color: #374151; color: #f5f5f5;">−</button> <span id="people-count"
+                class="font-display text-5xl min-w-[80px] text-center" style="color: #ff6b35;">10</span> <button
+                id="btn-increase"
+                class="w-12 h-12 rounded-full font-bold text-2xl transition-all hover:scale-110 active:scale-95"
+                style="background-color: #374151; color: #f5f5f5;">+</button>
+            </div>
+          </div>
+          <div class="mt-4"><input type="range" id="people-slider" min="5" max="50" value="10"
+              class="w-full cursor-pointer">
+            <div class="flex justify-between text-xs mt-1" style="color: #6b7280;"><span>5 pessoas</span> <span>50
+                pessoas</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Guests List -->
+        <div class="rounded-2xl p-6 mb-6 card-glow border border-white/5" style="background-color: #262626;">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-3xl">📝</span>
+            <div>
+              <h2 class="font-semibold text-lg" style="color: #f5f5f5;">Lista de Convidados</h2>
+              <p class="text-sm" style="color: #9ca3af;">Quem vai no churras?</p>
+            </div>
+          </div>
+          <form id="form-guest" class="flex gap-2 mb-4">
+            <input type="text" id="input-guest" placeholder="Nome do convidado..."
+              class="flex-1 bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-[#ff6b35]"
+              required>
+            <button type="submit"
+              class="px-4 py-2 rounded-xl font-semibold transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
+              style="background-color: #ff6b35; color: #1a1a1a;">
+              Adicionar
+            </button>
+          </form>
+          <ul id="guests-list" class="space-y-2 max-h-48 overflow-y-auto pr-2">
+            <!-- Guests will be mapped here -->
+          </ul>
+        </div><!-- Categories -->
+        <div id="categories-container" class="space-y-4"><!-- Categories will be rendered here -->
+        </div><!-- Summary Footer -->
+        <div class="mt-8 rounded-2xl p-6 ember-glow"
+          style="background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h3 class="font-display text-2xl tracking-wide" style="color: #1a1a1a;">RESUMO DA LISTA</h3>
+              <p id="summary-text" class="text-sm" style="color: rgba(26,26,26,0.8);">0 itens selecionados para 10
+                pessoas</p>
+            </div><button id="btn-copy"
+              class="px-6 py-3 rounded-xl font-semibold transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+              style="background-color: #1a1a1a; color: #ff6b35;">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+              </svg> Copiar Lista </button>
+          </div>
+        </div><!-- Toast -->
+        <div id="toast"
+          class="fixed bottom-4 left-1/2 -translate-x-1/2 px-6 py-3 rounded-xl font-medium transition-all duration-300 opacity-0 translate-y-4 pointer-events-none"
+          style="background-color: #22c55e; color: #ffffff;">
+          Lista copiada! 📋
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Default configuration
+    const defaultConfig = {
+      main_title: 'LISTA DE CHURRASCO',
+      subtitle_text: 'Monte sua lista perfeita para o churras',
+      background_color: '#1a1a1a',
+      card_color: '#262626',
+      text_color: '#f5f5f5',
+      primary_color: '#ff6b35',
+      secondary_color: '#9ca3af'
+    };
+
+    // Ingredients data (per person)
+    const ingredientsData = {
+      carnes: {
+        icon: '🥩',
+        name: 'Carnes',
+        items: [
+          { id: 'picanha', name: 'Picanha', perPerson: 0.25, unit: 'kg' },
+          { id: 'maminha', name: 'Maminha', perPerson: 0.15, unit: 'kg' },
+          { id: 'linguica', name: 'Linguiça', perPerson: 0.15, unit: 'kg' },
+          { id: 'fraldinha', name: 'Fraldinha', perPerson: 0.15, unit: 'kg' },
+          { id: 'costela', name: 'Costela', perPerson: 0.3, unit: 'kg' },
+          { id: 'frango', name: 'Coxa de Frango', perPerson: 0.2, unit: 'kg' },
+          { id: 'coracao', name: 'Coração de Frango', perPerson: 0.1, unit: 'kg' }
+        ]
+      },
+      bebidas: {
+        icon: '🍺',
+        name: 'Bebidas',
+        items: [
+          { id: 'cerveja', name: 'Cerveja', perPerson: 4, unit: 'latas' },
+          { id: 'refrigerante', name: 'Refrigerante', perPerson: 0.5, unit: 'L' },
+          { id: 'agua', name: 'Água', perPerson: 0.5, unit: 'L' },
+          { id: 'suco', name: 'Suco', perPerson: 0.3, unit: 'L' },
+          { id: 'gelo', name: 'Gelo', perPerson: 0.5, unit: 'kg' }
+        ]
+      },
+      acompanhamentos: {
+        icon: '🥗',
+        name: 'Acompanhamentos',
+        items: [
+          { id: 'farofa', name: 'Farofa', perPerson: 0.05, unit: 'kg' },
+          { id: 'vinagrete', name: 'Vinagrete', perPerson: 0.08, unit: 'kg' },
+          { id: 'pao_alho', name: 'Pão de Alho', perPerson: 2, unit: 'un' },
+          { id: 'arroz', name: 'Arroz', perPerson: 0.08, unit: 'kg' },
+          { id: 'maionese', name: 'Maionese', perPerson: 0.03, unit: 'kg' }
+        ]
+      },
+      saladas: {
+        icon: '🥬',
+        name: 'Saladas',
+        items: [
+          { id: 'alface', name: 'Alface', perPerson: 0.05, unit: 'kg' },
+          { id: 'tomate', name: 'Tomate', perPerson: 0.08, unit: 'kg' },
+          { id: 'cebola', name: 'Cebola', perPerson: 0.03, unit: 'kg' },
+          { id: 'rucula', name: 'Rúcula', perPerson: 0.03, unit: 'kg' }
+        ]
+      },
+      temperos: {
+        icon: '🧂',
+        name: 'Temperos e Extras',
+        items: [
+          { id: 'sal_grosso', name: 'Sal Grosso', perPerson: 0.03, unit: 'kg' },
+          { id: 'carvao', name: 'Carvão', perPerson: 0.5, unit: 'kg' },
+          { id: 'alcool', name: 'Álcool Acendedor', perPerson: 0.05, unit: 'L' },
+          { id: 'limao', name: 'Limão', perPerson: 0.5, unit: 'un' },
+          { id: 'queijo', name: 'Queijo Coalho', perPerson: 0.05, unit: 'kg' }
+        ]
+      }
+    };
+
+    // State
+    let people = 10;
+    let selectedItems = new Set(['picanha', 'linguica', 'cerveja', 'refrigerante', 'farofa', 'pao_alho', 'sal_grosso', 'carvao']);
+    let guests = [];
+
+    // Load saved data
+    try {
+      const savedData = localStorage.getItem('churrascoData');
+      if (savedData) {
+        const parsed = JSON.parse(savedData);
+        if (parsed && typeof parsed === 'object') {
+          for (const cat in parsed) {
+            if (ingredientsData[cat] && parsed[cat].items) {
+              // Replace everything so we can load dynamically added items correctly
+              ingredientsData[cat].items = parsed[cat].items;
+            }
+          }
+        }
+      }
+      const savedState = localStorage.getItem('churrascoState');
+      if (savedState) {
+        const s = JSON.parse(savedState);
+        if (s.people) people = s.people;
+        if (s.selectedItems) selectedItems = new Set(s.selectedItems);
+        if (s.guests) guests = s.guests;
+      }
+    } catch (e) { }
+
+    // Save data function
+    function saveData() {
+      try {
+        localStorage.setItem('churrascoData', JSON.stringify(ingredientsData));
+        localStorage.setItem('churrascoState', JSON.stringify({
+          people,
+          selectedItems: Array.from(selectedItems)
+        }));
+      } catch (e) { }
+    }
+
+    function handleEdit(e) {
+      const el = e.target;
+      const itemId = el.dataset.editId;
+      const editType = el.dataset.editType;
+      const newText = el.textContent.trim();
+
+      let item = null;
+      for (const key in ingredientsData) {
+        const found = ingredientsData[key].items.find(i => i.id === itemId);
+        if (found) {
+          item = found;
+          break;
+        }
+      }
+      if (!item) return;
+
+      if (editType === 'name') {
+        if (newText) {
+          item.name = newText;
+        } else {
+          el.textContent = item.name;
+        }
+      } else if (editType === 'quantity') {
+        const match = newText.match(/^([\d.,]+)\s*(.*)$/);
+        if (match) {
+          let numVal = parseFloat(match[1].replace(',', '.'));
+          let parsedUnit = match[2].trim().toLowerCase();
+
+          if (!isNaN(numVal)) {
+            let newTotal = numVal;
+            if (item.unit === 'kg') {
+              if (parsedUnit === 'g' || (parsedUnit === '' && numVal >= 10)) {
+                newTotal = numVal / 1000;
+              }
+            } else if (item.unit === 'L') {
+              if (parsedUnit === 'ml' || (parsedUnit === '' && numVal >= 10)) {
+                newTotal = numVal / 1000;
+              }
+            }
+            item.perPerson = newTotal / people;
+          }
+        }
+        updateQuantities();
+      }
+      saveData();
+    }
+
+    // DOM Elements
+    const peopleCountEl = document.getElementById('people-count');
+    const peopleSliderEl = document.getElementById('people-slider');
+    const categoriesContainer = document.getElementById('categories-container');
+    const summaryTextEl = document.getElementById('summary-text');
+    const btnDecrease = document.getElementById('btn-decrease');
+    const btnIncrease = document.getElementById('btn-increase');
+    const btnCopy = document.getElementById('btn-copy');
+    const toastEl = document.getElementById('toast');
+    const formGuest = document.getElementById('form-guest');
+    const inputGuest = document.getElementById('input-guest');
+    const guestsListEl = document.getElementById('guests-list');
+
+    // Format quantity
+    function formatQuantity(value, unit) {
+      if (unit === 'un' || unit === 'latas') {
+        return `${Math.ceil(value)} ${unit}`;
+      }
+      if (value >= 1) {
+        return `${value.toFixed(1)} ${unit}`;
+      }
+      return `${(value * 1000).toFixed(0)} g`;
+    }
+
+    // Calculate quantity for an item
+    function calculateQuantity(item) {
+      return item.perPerson * people;
+    }
+
+    // Render categories
+    function renderCategories() {
+      categoriesContainer.innerHTML = '';
+
+      Object.entries(ingredientsData).forEach(([key, category], catIndex) => {
+        const categoryEl = document.createElement('div');
+        categoryEl.className = 'rounded-2xl overflow-hidden card-glow animate-slide-in';
+        categoryEl.style.backgroundColor = '#262626';
+        categoryEl.style.animationDelay = `${catIndex * 0.1}s`;
+
+        categoryEl.innerHTML = `
+          <button class="category-header w-full px-6 py-4 flex items-center justify-between transition-colors hover:bg-white/5" data-category="${key}">
+            <div class="flex items-center gap-3">
+              <span class="text-2xl">${category.icon}</span>
+              <span class="font-semibold text-lg" style="color: #f5f5f5;">${category.name}</span>
+              <span class="text-sm px-2 py-0.5 rounded-full" style="background-color: #374151; color: #9ca3af;">
+                ${category.items.filter(i => selectedItems.has(i.id)).length}/${category.items.length}
+              </span>
+            </div>
+            <svg class="w-5 h-5 transition-transform category-arrow" style="color: #9ca3af;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="category-content px-4 pb-4 hidden" data-content="${key}">
+            <div class="space-y-2">
+              ${category.items.map(item => `
+                <div class="flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all hover:bg-white/5 ${selectedItems.has(item.id) ? 'bg-white/5' : ''}" data-item-container="${item.id}">
+                  <div class="flex items-center gap-3 flex-1 overflow-hidden pr-2">
+                    <input type="checkbox" 
+                      class="checkbox-custom w-5 h-5 rounded border-2 cursor-pointer appearance-none transition-all flex-shrink-0" 
+                      style="border-color: #4b5563; background-color: ${selectedItems.has(item.id) ? '#ff6b35' : 'transparent'};"
+                      data-item="${item.id}"
+                      ${selectedItems.has(item.id) ? 'checked' : ''}>
+                    <span class="border-b border-dashed border-gray-600 hover:border-[#ff6b35] focus:border-solid focus:border-[#ff6b35] outline-none transition-colors cursor-text truncate block overflow-hidden"
+                          contenteditable="true"
+                          spellcheck="false"
+                          data-edit-id="${item.id}"
+                          data-edit-type="name"
+                          title="Clique para editar nome"
+                          style="color: ${selectedItems.has(item.id) ? '#f5f5f5' : '#9ca3af'};">${item.name}</span>
+                  </div>
+                  <span class="font-medium tabular-nums border-b border-dashed border-gray-600 hover:border-[#ff6b35] focus:border-solid focus:border-[#ff6b35] outline-none transition-colors cursor-text text-right min-w-[50px] whitespace-nowrap"
+                        contenteditable="true"
+                        spellcheck="false"
+                        data-edit-id="${item.id}"
+                        data-edit-type="quantity"
+                        title="Clique pra editar quantidade"
+                        style="color: ${selectedItems.has(item.id) ? '#ff6b35' : '#6b7280'};" 
+                        data-quantity="${item.id}">${formatQuantity(calculateQuantity(item), item.unit)}</span>
+                </div>
+              `).join('')}
+            </div>
+            <button class="w-full mt-3 py-2 rounded-xl text-sm font-medium border border-dashed border-gray-600 hover:border-[#ff6b35] hover:text-[#ff6b35] transition-colors"
+              style="color: #9ca3af;" data-add-item="${key}">
+              + Adicionar Item
+            </button>
+          </div>
+        `;
+
+        categoriesContainer.appendChild(categoryEl);
+      });
+
+      // Add event listeners
+      document.querySelectorAll('.category-header').forEach(header => {
+        header.addEventListener('click', () => {
+          const category = header.dataset.category;
+          const content = document.querySelector(`[data-content="${category}"]`);
+          const arrow = header.querySelector('.category-arrow');
+
+          content.classList.toggle('hidden');
+          arrow.style.transform = content.classList.contains('hidden') ? '' : 'rotate(180deg)';
+        });
+      });
+
+      document.querySelectorAll('[data-item-container]').forEach(container => {
+        container.addEventListener('click', (e) => {
+          if (e.target.hasAttribute('contenteditable') || e.target.tagName === 'INPUT') {
+            return;
+          }
+          const checkbox = container.querySelector('input[type="checkbox"]');
+          checkbox.checked = !checkbox.checked;
+          checkbox.dispatchEvent(new Event('change'));
+        });
+      });
+
+      document.querySelectorAll('[data-item]').forEach(checkbox => {
+        checkbox.addEventListener('change', (e) => {
+          const itemId = e.target.dataset.item;
+          if (e.target.checked) {
+            selectedItems.add(itemId);
+          } else {
+            selectedItems.delete(itemId);
+          }
+          updateUI();
+        });
+      });
+
+      document.querySelectorAll('[contenteditable]').forEach(el => {
+        el.addEventListener('blur', handleEdit);
+        el.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            e.target.blur();
+          }
+        });
+        el.addEventListener('click', (e) => e.stopPropagation());
+      });
+
+      document.querySelectorAll('[data-add-item]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const categoryKey = btn.dataset.addItem;
+          const category = ingredientsData[categoryKey];
+
+          const newItemId = `${categoryKey}_${Date.now()}`;
+          const defaultUnit = category.items[0]?.unit || 'un';
+
+          category.items.push({
+            id: newItemId,
+            name: 'Novo Item',
+            perPerson: 0.1,
+            unit: defaultUnit
+          });
+
+          // Open the newly created item as checked by default
+          selectedItems.add(newItemId);
+          saveData();
+          renderCategories();
+          updateUI();
+
+          // Re-open category panel if needed
+          const content = document.querySelector(`[data-content="${categoryKey}"]`);
+          const arrow = document.querySelector(`[data-category="${categoryKey}"] .category-arrow`);
+          if (content && content.classList.contains('hidden')) {
+            content.classList.remove('hidden');
+            arrow.style.transform = 'rotate(180deg)';
+          }
+        });
+      });
+
+      // Maintain category expansion state by default
+      const firstContent = document.querySelector('[data-content="carnes"]');
+      const firstArrow = document.querySelector('[data-category="carnes"] .category-arrow');
+      if (firstContent && firstArrow) {
+        firstContent.classList.remove('hidden');
+        firstArrow.style.transform = 'rotate(180deg)';
+      }
+    }
+
+    // Update quantities display
+    function updateQuantities() {
+      Object.values(ingredientsData).forEach(category => {
+        category.items.forEach(item => {
+          const quantityEl = document.querySelector(`[data-quantity="${item.id}"]`);
+          if (quantityEl) {
+            quantityEl.textContent = formatQuantity(calculateQuantity(item), item.unit);
+          }
+        });
+      });
+    }
+
+    // Update item styling
+    function updateItemStyling() {
+      document.querySelectorAll('[data-item]').forEach(checkbox => {
+        const itemId = checkbox.dataset.item;
+        const container = document.querySelector(`[data-item-container="${itemId}"]`);
+        if (!container) return;
+
+        const nameSpan = container.querySelector('[data-edit-type="name"]');
+        const quantitySpan = container.querySelector('[data-edit-type="quantity"]');
+        const isSelected = selectedItems.has(itemId);
+
+        checkbox.checked = isSelected;
+        checkbox.style.backgroundColor = isSelected ? '#ff6b35' : 'transparent';
+        container.classList.toggle('bg-white/5', isSelected);
+        if (nameSpan) nameSpan.style.color = isSelected ? '#f5f5f5' : '#9ca3af';
+        if (quantitySpan) quantitySpan.style.color = isSelected ? '#ff6b35' : '#6b7280';
+      });
+
+      // Update category counters
+      Object.entries(ingredientsData).forEach(([key, category]) => {
+        const header = document.querySelector(`[data-category="${key}"]`);
+        if (header) {
+          const counter = header.querySelector('span.text-sm');
+          counter.textContent = `${category.items.filter(i => selectedItems.has(i.id)).length}/${category.items.length}`;
+        }
+      });
+    }
+
+    // Update summary
+    function updateSummary() {
+      summaryTextEl.textContent = `${selectedItems.size} itens selecionados para ${people} pessoas`;
+    }
+
+    // Guests rendering
+    function renderGuests() {
+      guestsListEl.innerHTML = '';
+      if (guests.length === 0) {
+        guestsListEl.innerHTML = '<li class="text-xs italic text-gray-500 text-center py-2">Nenhum convidado adicionado.</li>';
+        return;
+      }
+      guests.forEach((guest, index) => {
+        const li = document.createElement('li');
+        li.className = 'flex items-center justify-between p-2 rounded-lg bg-black/20 group';
+        li.innerHTML = `
+          <span class="text-white text-sm truncate">${guest}</span>
+          <button class="text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-red-500/20 rounded-md" 
+            onclick="removeGuest(${index})">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        `;
+        guestsListEl.appendChild(li);
+      });
+    }
+
+    window.removeGuest = function (index) {
+      guests.splice(index, 1);
+      renderGuests();
+      saveData();
+    };
+
+    // Update UI
+    function updateUI() {
+      peopleCountEl.textContent = people;
+      peopleSliderEl.value = people;
+      updateQuantities();
+      updateItemStyling();
+      updateSummary();
+      renderGuests();
+      saveData();
+    }
+
+    // Copy list to clipboard
+    function copyList() {
+      let listText = `🔥 LISTA DE CHURRASCO - ${people} PESSOAS 🔥\n\n`;
+
+      if (guests.length > 0) {
+        listText += `👥 CONVIDADOS (${guests.length}):\n`;
+        guests.forEach(guest => {
+          listText += `  • ${guest}\n`;
+        });
+        listText += '\n';
+      }
+
+      Object.entries(ingredientsData).forEach(([key, category]) => {
+        const selectedInCategory = category.items.filter(i => selectedItems.has(i.id));
+        if (selectedInCategory.length > 0) {
+          listText += `${category.icon} ${category.name.toUpperCase()}\n`;
+          selectedInCategory.forEach(item => {
+            listText += `  • ${item.name}: ${formatQuantity(calculateQuantity(item), item.unit)}\n`;
+          });
+          listText += '\n';
+        }
+      });
+
+      navigator.clipboard.writeText(listText).then(() => {
+        showToast();
+      });
+    }
+
+    // Show toast
+    function showToast() {
+      toastEl.classList.remove('opacity-0', 'translate-y-4');
+      toastEl.classList.add('opacity-100', 'translate-y-0');
+
+      setTimeout(() => {
+        toastEl.classList.remove('opacity-100', 'translate-y-0');
+        toastEl.classList.add('opacity-0', 'translate-y-4');
+      }, 2000);
+    }
+
+    // Event listeners
+    btnDecrease.addEventListener('click', () => {
+      if (people > 5) {
+        people--;
+        updateUI();
+      }
+    });
+
+    btnIncrease.addEventListener('click', () => {
+      if (people < 50) {
+        people++;
+        updateUI();
+      }
+    });
+
+    peopleSliderEl.addEventListener('input', (e) => {
+      people = parseInt(e.target.value);
+      updateUI();
+    });
+
+    btnCopy.addEventListener('click', copyList);
+
+    formGuest.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const guestName = inputGuest.value.trim();
+      if (guestName) {
+        guests.push(guestName);
+        inputGuest.value = '';
+        renderGuests();
+        saveData();
+      }
+    });
+
+    // Element SDK Integration
+    async function onConfigChange(config) {
+      const mainTitle = document.getElementById('main-title');
+      const subtitle = document.getElementById('subtitle');
+
+      mainTitle.textContent = config.main_title || defaultConfig.main_title;
+      subtitle.textContent = config.subtitle_text || defaultConfig.subtitle_text;
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [
+          {
+            get: () => config.background_color || defaultConfig.background_color,
+            set: (value) => {
+              config.background_color = value;
+              window.elementSdk.setConfig({ background_color: value });
+            }
+          },
+          {
+            get: () => config.card_color || defaultConfig.card_color,
+            set: (value) => {
+              config.card_color = value;
+              window.elementSdk.setConfig({ card_color: value });
+            }
+          },
+          {
+            get: () => config.text_color || defaultConfig.text_color,
+            set: (value) => {
+              config.text_color = value;
+              window.elementSdk.setConfig({ text_color: value });
+            }
+          },
+          {
+            get: () => config.primary_color || defaultConfig.primary_color,
+            set: (value) => {
+              config.primary_color = value;
+              window.elementSdk.setConfig({ primary_color: value });
+            }
+          },
+          {
+            get: () => config.secondary_color || defaultConfig.secondary_color,
+            set: (value) => {
+              config.secondary_color = value;
+              window.elementSdk.setConfig({ secondary_color: value });
+            }
+          }
+        ],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ['main_title', config.main_title || defaultConfig.main_title],
+        ['subtitle_text', config.subtitle_text || defaultConfig.subtitle_text]
+      ]);
+    }
+
+    // Initialize
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+
+    renderCategories();
+    renderGuests();
+    updateUI();
+  </script>
+  <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'9d499fc6b427139f',t:'MTc3MjIxNTY3MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+</body>
+
+</html>
