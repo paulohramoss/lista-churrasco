@@ -349,8 +349,10 @@
               }
             }
             item.perPerson = newTotal / people;
+            item.isFixed = true; // Mark as user overridden
           }
         }
+        recalculateMeats();
         updateQuantities();
       }
       saveData();
@@ -473,10 +475,21 @@
       document.querySelectorAll('[data-item]').forEach(checkbox => {
         checkbox.addEventListener('change', (e) => {
           const itemId = e.target.dataset.item;
+
+          let itemObj = null;
+          for (const key in ingredientsData) {
+            const found = ingredientsData[key].items.find(i => i.id === itemId);
+            if (found) {
+              itemObj = found;
+              break;
+            }
+          }
+
           if (e.target.checked) {
             selectedItems.add(itemId);
           } else {
             selectedItems.delete(itemId);
+            if (itemObj) itemObj.isFixed = false;
           }
           updateUI();
         });
@@ -606,8 +619,41 @@
       saveData();
     };
 
+    // Recalculate meats to maintain 500g per person total
+    function recalculateMeats() {
+      const targetMeatPerPerson = 0.5; // 500g
+      const carnes = ingredientsData['carnes'];
+      if (!carnes) return;
+
+      carnes.items.forEach(item => {
+        if (item.basePerPerson === undefined) item.basePerPerson = item.perPerson;
+      });
+
+      const selectedCarnes = carnes.items.filter(i => selectedItems.has(i.id));
+      const fixedItems = selectedCarnes.filter(i => i.isFixed);
+      const nonFixedItems = selectedCarnes.filter(i => !i.isFixed);
+
+      const fixedTotal = fixedItems.reduce((sum, i) => sum + i.perPerson, 0);
+      const remainingTarget = Math.max(0, targetMeatPerPerson - fixedTotal);
+
+      const totalBase = nonFixedItems.reduce((sum, i) => sum + i.basePerPerson, 0);
+
+      nonFixedItems.forEach(item => {
+        if (totalBase > 0) {
+          item.perPerson = (item.basePerPerson / totalBase) * remainingTarget;
+        } else {
+          item.perPerson = remainingTarget / nonFixedItems.length;
+        }
+      });
+
+      carnes.items.filter(i => !selectedItems.has(i.id)).forEach(item => {
+        item.perPerson = item.basePerPerson;
+      });
+    }
+
     // Update UI
     function updateUI() {
+      recalculateMeats();
       peopleCountEl.textContent = people;
       peopleSliderEl.value = people;
       updateQuantities();
